@@ -1,23 +1,24 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from 'react';
+import SearchBar from './components/SearchBar';
+import unsplash from './components/api/unsplash';
 
 function App() {
+
+  const [image, setImage] = useState('');
+
+  const onSearchSubmit = async(term) => {
+   const response = await unsplash.get('/search/photos', {
+      params: { query: term },     
+    })
+    
+    console.log(response.data.results)
+    setImage(response.data.results)
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="ui container" style={{marginTop: '10px'}}>
+      <SearchBar onSubmit={onSearchSubmit}/>
+      Found: {image.length} images
     </div>
   );
 }
